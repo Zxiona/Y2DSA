@@ -1,2 +1,2 @@
-# Team-7
+# DSA
 DSA module coursework

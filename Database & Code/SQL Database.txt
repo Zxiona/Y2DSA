@@ -29,3 +29,12 @@ CREATE TABLE Place_Of_Interest (
     FOREIGN KEY (City_ID) REFERENCES City(City_ID),
     FOREIGN KEY (Type_ID) REFERENCES Type(Type_ID)
 );
+
+CREATE TABLE Borough (
+    Borough_ID INT AUTO_INCREMENT PRIMARY KEY,
+    City_ID INT,
+    Place_ID INT,
+    Name VARCHAR(20),
+    FOREIGN KEY (City_ID) REFERENCES City(City_ID),
+    FOREIGN KEY (Place_ID) REFERENCES Place_of_Interest(Place_ID)
+);

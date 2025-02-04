@@ -5,7 +5,7 @@ namespace TwinCities;
 define ('INSERT_WEATHER_API_KEY_HERE', '')
 define ('INSERT_GOOGLE_MAPS_API_KEY_HERE', '')
 
-defin ('DBMS', [
+define ('DBMS', [
     'HOST' => 'localhost',
     'DB' => 'twin-cities',
     'UN' => 'root',

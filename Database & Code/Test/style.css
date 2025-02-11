@@ -55,6 +55,20 @@ small{
   font-size: 0.75rem;
 }
 
+header{
+  background: var(--color-background);
+}
+
+.inner-width{
+  max-width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  margin: auto;
+  color: var(--color-dark);
+}
+
 .wrapper {
   display: flex;
   justify-content: flex-end;

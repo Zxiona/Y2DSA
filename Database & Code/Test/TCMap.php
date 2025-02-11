@@ -65,34 +65,37 @@ $NYLng = -74.0060;
 
   <!-- Google Maps JavaScript API -->
   <script>
-    // Coordinates for London
-    const london = {
-      lat: <?php echo $londonLat; ?>,
-      lng: <?php echo $londonLng; ?>
-    };
+    // State variable to track the active city
+    let isNewYorkActive = false;
 
-    const newyork = {
-      lat: <?php echo $NYLat; ?>,
-      lng: <?php echo $NYLng; ?>
-    }
-
-    // Initialize and display the map
     function initMap() {
-      // Create a map centered on London
+
+      // Define the coordinates for London and New York
+      const london = {
+        lat: <?php echo $londonLat; ?>,
+        lng: <?php echo $londonLng; ?>
+      };
+
+      const newyork = {
+        lat: <?php echo $NYLat; ?>,
+        lng: <?php echo $NYLng; ?>
+      }
+
+      // Create a map centered on London initially
       const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 12, // Adjust zoom level
         center: london, // Center the map on London
       });
 
-      // Add a marker for London
-      new google.maps.Marker({
+      // Add markers for both cities
+      const londonMarker = new google.maps.Marker({
         position: london,
         map: map,
         title: "London, UK",
       });
 
       const newYorkMarker = new google.maps.Marker({
-        position: newYork,
+        position: newyork,
         map: map,
         title: "New York, USA",
       });
@@ -107,7 +110,7 @@ $NYLng = -74.0060;
 
         // Update the map center and marker visibility based on the active city
         if (isNewYorkActive) {
-          map.setCenter(newYork);
+          map.setCenter(newyork);
           londonMarker.setVisible(false);
           newYorkMarker.setVisible(true);
         } else {
@@ -116,22 +119,6 @@ $NYLng = -74.0060;
           newYorkMarker.setVisible(false);
         }
       });
-
-      /*
-      // Add a click event listener to the city-icon
-      document.querySelector('.city-icon').addEventListener('click', function() {
-        const map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 12, // Adjust zoom level
-          center: newyork, // Center the map on London
-        });
-        // Optionally, add a marker for New York
-        new google.maps.Marker({
-          position: newYork,
-          map: map,
-          title: "New York, USA",
-        });
-      });
-      */
     }
   </script>
 
@@ -148,7 +135,7 @@ $NYLng = -74.0060;
 
     $(".city-icon").click(function() {
       $(this).toggleClass("active");
-      $(".city-icon i").toggleClass("fa-times");
+      $("ny-icon i").toggleClass("fa-times");
     });
   </script>
 

@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost"; // Change if using a remote server
 $username = "root";        // Your MySQL username
-$password = " ";            // Your MySQL password
+$password = "";            // Your MySQL password
 $dbname = "twin_city";     // Database name
 
 // Create connection to MySQL server
@@ -49,6 +49,8 @@ $sql_queries = [
         Type_ID INT NOT NULL,
         Name VARCHAR(255) NOT NULL,
         Address VARCHAR(255),
+        Latitude DECIMAL(18,15),
+        Longitude DECIMAL(18,15),
         Description TEXT,
         Photos VARCHAR(255),
         Opening_Time TIME,
@@ -85,23 +87,23 @@ $insert_queries = [
     "INSERT INTO Type (Name)
      VALUES ('Restaurants'), ('Train Stations'), ('Universities'), ('Banks'), ('Museums'), ('5 Star Hotels')",
 
-    "INSERT INTO Place_of_Interest (City_ID, Type_ID, Name, Address, Description, Photos, Opening_time, Ending_time)
+    "INSERT INTO Place_of_Interest (City_ID, Type_ID, Name, Address, Latitude, Longitude, Description, Photos, Opening_time, Ending_time)
     VALUES
-    (1, 1, 'Scully', '4 St James''s Market, London SW1Y 4AH', 'Restaurant', 'https://i.imgur.com/zAp50yG.jpg', '08:00:00', '22:00:00'),
-    (1, 2, 'Charing Cross', 'Strand, London WC2N 5HF', 'Train Station', 'https://i.imgur.com/XSB8EMh.jpg', '05:00:00', '23:00:00'),
-    (1, 3, 'University of Notre Dame (USA) in England', '1 Suffolk St, London SW1Y 4HG', 'University', 'https://i.imgur.com/XLMl5aX.jpg', '09:00:00', '18:00:00'),
-    (1, 4, 'HSBC Covent Garden', '16 King St, London WC2E 8JF', 'Bank', 'https://i.imgur.com/nzcj5JW.jpg', '09:00:00', '17:00:00'),
-    (1, 5, 'The National Gallery', 'Trafalgar Square, London WC2N 5DN', 'Museum', 'https://i.imgur.com/IUKwxWf.jpg', '10:00:00', '18:00:00'),
-    (1, 6, 'Corinthia London', 'Whitehall Pl, London SW1A 2BD', '5 Star Hotel', 'https://i.imgur.com/4LCPpgy.jpg', '00:00:00', '23:59:59')",
+    (1, 1, 'Scully', '4 St James''s Market, London SW1Y 4AH', 51.509136687911685, -0.1329663068511105,'Restaurant', 'https://i.imgur.com/zAp50yG.jpg', '08:00:00', '22:00:00'),
+    (1, 2, 'Charing Cross', 'Strand, London WC2N 5HF', 51.50829422485241, -0.12483750236822497, 'Train Station', 'https://i.imgur.com/XSB8EMh.jpg', '05:00:00', '23:00:00'),
+    (1, 3, 'University of Notre Dame (USA) in England', '1 Suffolk St, London SW1Y 4HG', 51.508420513914544, -0.1303707027499567, 'University', 'https://i.imgur.com/XLMl5aX.jpg', '09:00:00', '18:00:00'),
+    (1, 4, 'HSBC Covent Garden', '16 King St, London WC2E 8JF', 51.51141719809663, -0.12495604692421396, 'Bank', 'https://i.imgur.com/nzcj5JW.jpg', '09:00:00', '17:00:00'),
+    (1, 5, 'The National Gallery', 'Trafalgar Square, London WC2N 5DN', 51.50906252259639, -0.12836337575917522, 'Museum', 'https://i.imgur.com/IUKwxWf.jpg', '10:00:00', '18:00:00'),
+    (1, 6, 'Corinthia London', 'Whitehall Pl, London SW1A 2BD', 51.50658047404813, -0.12433406041980899, '5 Star Hotel', 'https://i.imgur.com/4LCPpgy.jpg', '00:00:00', '23:59:59')",
 
-    "INSERT INTO Place_of_Interest (City_ID, Type_ID, Name, Address, Description, Photos, Opening_time, Ending_time)
+    "INSERT INTO Place_of_Interest (City_ID, Type_ID, Name, Address, Latitude, Longitude, Description, Photos, Opening_time, Ending_time)
     VALUES
-    (2, 1, 'Reserve Cut', '40 Broad St 2nd Floor, New York, NY 10004, United States', 'Restaurant', 'https://i.imgur.com/YqVLAHX.jpg', '08:00:00', '22:00:00'),
-    (2, 2, 'World Trade Center', '10007, 70 Vesey St, New York, 10006, United States', 'Train Station', 'https://i.imgur.com/kEm63qX.jpg', '05:00:00', '23:00:00'),
-    (2, 3, 'New York University', 'New York, NY 10012, United States', 'University', 'https://i.imgur.com/vV3wKlq.jpg', '09:00:00', '18:00:00'),
-    (2, 4, 'Bank of America Financial Center', '50 Bayard St, New York, NY 10013, United States', 'Bank', 'https://i.imgur.com/0bFaPxo.png', '09:00:00', '17:00:00'),
-    (2, 5, '9/11 Memorial & Museum', '180 Greenwich St, New York, NY 10007, United States', 'Museum', 'https://i.imgur.com/e4ixMsP.jpg', '10:00:00', '18:00:00'),
-    (2, 6, 'The Beekman, A Thompson Hotel, by Hyatt', '123 Nassau St, New York, NY 10038, United States', '5 Star Hotel', 'https://i.imgur.com/KNGQzZO.jpg', '00:00:00', '23:59:59')",
+    (2, 1, 'Reserve Cut', '40 Broad St 2nd Floor, New York, NY 10004, United States', 40.7061850023493, -74.01175457253665, 'Restaurant', 'https://i.imgur.com/YqVLAHX.jpg', '08:00:00', '22:00:00'),
+    (2, 2, 'World Trade Center', '10007, 70 Vesey St, New York, 10006, United States', 40.712844368679654, -74.01188602903355, 'Train Station', 'https://i.imgur.com/kEm63qX.jpg', '05:00:00', '23:00:00'),
+    (2, 3, 'New York University', 'New York, NY 10012, United States', 40.72960280456913, -73.99646090321473, 'University', 'https://i.imgur.com/vV3wKlq.jpg', '09:00:00', '18:00:00'),
+    (2, 4, 'Bank of America Financial Center', '50 Bayard St, New York, NY 10013, United States', 40.715404959295654, -73.99693820331343, 'Bank', 'https://i.imgur.com/0bFaPxo.png', '09:00:00', '17:00:00'),
+    (2, 5, '9/11 Memorial & Museum', '180 Greenwich St, New York, NY 10007, United States', 40.71173208843338, -74.01331474554571, 'Museum', 'https://i.imgur.com/e4ixMsP.jpg', '10:00:00', '18:00:00'),
+    (2, 6, 'The Beekman, A Thompson Hotel, by Hyatt', '123 Nassau St, New York, NY 10038, United States', 40.71131902044953, -74.00692557728706, '5 Star Hotel', 'https://i.imgur.com/KNGQzZO.jpg', '00:00:00', '23:59:59')",
 
 
     "INSERT INTO Borough (City_ID,Name)

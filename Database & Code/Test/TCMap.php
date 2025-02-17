@@ -1,6 +1,6 @@
 <?php
 // Define the Maps API key
-$apiKey = 'AIzaSyA4XaLaHE88hCOIz54_3CY9qRk31x38B7A'; // Replace with your actual API key
+$apiKey = ''; // Replace with your actual API key
 
 // Coordinates for London
 $londonLat = 51.5074;

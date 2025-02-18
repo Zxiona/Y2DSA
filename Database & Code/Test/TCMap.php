@@ -1,6 +1,6 @@
 <?php
 // Define the Maps API key
-$apiKey = ''; // Replace with your actual API key
+$apiKey = 'AIzaSyA4XaLaHE88hCOIz54_3CY9qRk31x38B7A'; // Replace with your actual API key
 
 // Coordinates for London
 $londonLat = 51.5074;
@@ -10,6 +10,7 @@ $londonLng = -0.1278;
 $NYLat = 40.7128;
 $NYLng = -74.0060;
 
+include "external.php";
 ?>
 
 <!DOCTYPE html>
@@ -65,58 +66,98 @@ $NYLng = -74.0060;
 
   <!-- Google Maps JavaScript API -->
   <script>
+    // Pass PHP data to JavaScript
+    const ldnpoiData = <?php echo json_encode($ldnpoiData); ?>;
+    const nypoiData = <?php echo json_encode($nypoiData); ?>;
+
     // State variable to track the active city
     let isNewYorkActive = false;
 
     function initMap() {
-
-      // Define the coordinates for London and New York
       const london = {
         lat: <?php echo $londonLat; ?>,
         lng: <?php echo $londonLng; ?>
       };
-
       const newyork = {
         lat: <?php echo $NYLat; ?>,
         lng: <?php echo $NYLng; ?>
+      };
+
+      // Initialize map centered on London
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 14,
+        center: london,
+      });
+
+      // Create a single InfoWindow instance for hover effect
+      const infowindow = new google.maps.InfoWindow();
+
+      // Store markers in an array for toggling
+      let londonMarkers = [];
+      let newYorkMarkers = [];
+
+      // Function to create markers
+      function createMarker(poi, isNewYork = false) {
+        const marker = new google.maps.Marker({
+          position: {
+            lat: parseFloat(poi.Latitude),
+            lng: parseFloat(poi.Longitude)
+          },
+          map: isNewYork ? null : map, // Hide New York markers initially
+          title: poi.Name,
+        });
+
+        // MouseOver event to show brief info
+        marker.addListener("mouseover", () => {
+          infowindow.setContent(`
+                <div>
+                    <h3>${poi.Name}</h3>
+                    <p>${poi.Address}</p>
+                    <p>Opening: ${poi.Opening_time} - Closing: ${poi.Ending_time}</p>
+                </div>
+            `);
+          infowindow.open(map, marker);
+        });
+
+        // MouseOut event to hide the InfoWindow
+        marker.addListener("mouseout", () => {
+          infowindow.close();
+        });
+
+        // Click event to navigate to a detailed page
+        marker.addListener("click", () => {
+          window.location.href = `details.php?id=${poi.ID}`;
+        });
+
+        return marker;
       }
 
-      // Create a map centered on London initially
-      const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 12, // Adjust zoom level
-        center: london, // Center the map on London
+      // Create markers for London POIs
+      ldnpoiData.forEach(poi => {
+        const marker = createMarker(poi, false);
+        londonMarkers.push(marker);
       });
 
-      // Add markers for both cities
-      const londonMarker = new google.maps.Marker({
-        position: london,
-        map: map,
-        title: "London, UK",
+      // Create markers for New York POIs
+      nypoiData.forEach(poi => {
+        const marker = createMarker(poi, true);
+        newYorkMarkers.push(marker);
       });
 
-      const newYorkMarker = new google.maps.Marker({
-        position: newyork,
-        map: map,
-        title: "New York, USA",
-      });
+      // Initially hide New York markers
+      newYorkMarkers.forEach(marker => marker.setMap(null));
 
-      // Initially hide the New York marker
-      newYorkMarker.setVisible(false);
-
-      // Add a click event listener to the city-icon
+      // City toggle functionality
       document.querySelector('.city-icon').addEventListener('click', function() {
-        // Toggle the active city state
         isNewYorkActive = !isNewYorkActive;
-
-        // Update the map center and marker visibility based on the active city
         if (isNewYorkActive) {
           map.setCenter(newyork);
-          londonMarker.setVisible(false);
-          newYorkMarker.setVisible(true);
+          londonMarkers.forEach(marker => marker.setMap(null)); // Hide London markers
+          newYorkMarkers.forEach(marker => marker.setMap(map)); // Show New York markers
         } else {
           map.setCenter(london);
-          londonMarker.setVisible(true);
-          newYorkMarker.setVisible(false);
+          londonMarkers.forEach(marker => marker.setMap(map)); // Show London markers
+          newYorkMarkers.forEach(marker => marker.setMap(null)); // Hide New York markers
         }
       });
     }

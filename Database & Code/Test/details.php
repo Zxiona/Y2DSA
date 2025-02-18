@@ -1,35 +1,51 @@
 <?php
+//file name: details.php
 // Database connection
 $servername = "localhost"; // Change if using a remote server
 $username = "root";        // Your MySQL username
-$password = "";            // Your MySQL password
+$password = "";   // Your MySQL password
 $dbname = "twin_city";     // Database name
 
 // Create connection to MySQL server
-$conn = new mysqli($servername, $username, $password);
+$conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Select the database
-$conn->select_db($dbname);
-
 if (!isset($_GET['id'])) {
-    echo "Invalid request!";
+    echo "Invalid request! ID parameter is missing.";
     exit;
 }
 
 $poi_id = intval($_GET['id']);
-$query = "SELECT * FROM poi_table WHERE ID = ?";
+
+// Debugging: Print the POI ID being fetched
+echo "Debug: Fetching POI with ID = " . $poi_id . "<br>";
+
+// Corrected query: Use `Place_ID` instead of `ID`
+$query = "SELECT * FROM place_of_interest WHERE Place_ID = ?";
 $stmt = $conn->prepare($query);
+
+if (!$stmt) {
+    die("Error preparing query: " . $conn->error);
+}
+
 $stmt->bind_param("i", $poi_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
+// Debugging: Print the number of rows found
+echo "Debug: Number of rows found = " . $result->num_rows . "<br>";
+
 if ($result->num_rows > 0) {
     $poi = $result->fetch_assoc();
+
+    // Debugging: Print the fetched POI data
+    echo "<pre>";
+    print_r($poi);
+    echo "</pre>";
 } else {
     echo "POI not found!";
     exit;
@@ -55,7 +71,7 @@ if ($result->num_rows > 0) {
         <img src="<?php echo htmlspecialchars($poi['Photos']); ?>" alt="<?php echo htmlspecialchars($poi['Name']); ?>" width="400">
     <?php endif; ?>
     <br>
-    <a href="index.php">Back to Map</a>
+    <a href="TCMap.php">Back to Map</a>
 </body>
 
 </html>

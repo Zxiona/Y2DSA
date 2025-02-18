@@ -1,4 +1,5 @@
 <?php
+//file name: TCMap.php
 // Define the Maps API key
 $apiKey = 'AIzaSyA4XaLaHE88hCOIz54_3CY9qRk31x38B7A'; // Replace with your actual API key
 
@@ -107,6 +108,9 @@ include "external.php";
           title: poi.Name,
         });
 
+        //Debugging: note the POI data
+        console.log("Creating Marker for POI:", poi);
+
         // MouseOver event to show brief info
         marker.addListener("mouseover", () => {
           infowindow.setContent(`
@@ -126,7 +130,8 @@ include "external.php";
 
         // Click event to navigate to a detailed page
         marker.addListener("click", () => {
-          window.location.href = `details.php?id=${poi.ID}`;
+          console.log("Marker Clicked, POI ID:", poi.Place_ID); // Debugging: Log the POI ID
+          window.location.href = `details.php?id=${poi.Place_ID}`;
         });
 
         return marker;

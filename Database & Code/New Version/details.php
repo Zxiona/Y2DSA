@@ -5,7 +5,7 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 // Database connection
 $servername = "localhost";
 $username = "root";
-$password = "!Rr201612066";
+$password = "";
 $dbname = "twin_city";
 
 $conn = new mysqli($servername, $username, $password, $dbname);

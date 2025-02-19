@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost"; // Change if using a remote server
 $username = "root";        // Your MySQL username
-$password = "!Rr201612066";            // Your MySQL password
+$password = "";            // Your MySQL password
 $dbname = "twin_city";     // Database name
 
 // Create connection to MySQL server

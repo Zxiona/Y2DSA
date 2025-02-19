@@ -1,7 +1,7 @@
 <?php
 //file name: TCMap.php
 // Define the Maps API key
-$apiKey = 'AIzaSyDV-DTvQS2-efIOY_PNrnrONroXBplxiRc'; // Replace with your actual API key
+$apiKey = ''; // Replace with your actual API key
 
 // Coordinates for London
 $londonLat = 51.5074;

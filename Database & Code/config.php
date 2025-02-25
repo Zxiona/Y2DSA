@@ -2,8 +2,8 @@
 namespace TwinCities;
 @date_default_timezone_set("GMT");
 
-define ('a67f6401fd6fa2e768d27abc6719b257', '$WeatherAPIKey') #nathans api key replace with your own
-define ('AIzaSyA4XaLaHE88hCOIz54_3CY9qRk31x38B7A', '$MapAPIKey') #nathans api key replace with your own
+define ('', '$WeatherAPIKey') 
+define ('', '$MapAPIKey') 
 
 define ('DBMS', [
     'HOST' => 'localhost',

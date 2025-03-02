@@ -1,6 +1,6 @@
 <?php
-define('WeatherAPIKey', 'a67f6401fd6fa2e768d27abc6719b257');
-define('MapAPIKey', 'AIzaSyB2ur87DvIcq2ChL047ZHi8OsUlmuSser4');
+define('WeatherAPIKey', '');
+define('MapAPIKey', '');
 
 $servername = "localhost"; // Change if using a remote server
 $username = "root";        // Your MySQL username

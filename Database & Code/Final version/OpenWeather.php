@@ -28,7 +28,7 @@ function displayCurrentWeather($weather, $city) {
     $iconUrl = "http://openweathermap.org/img/wn/{$iconCode}@2x.png";
     echo "<div style='border:1px solid #ddd; padding: 10px; margin: 10px;'>";
     echo "<h2>Current Weather in $city on " . date('D dS F Y @ H:i:s') . "</h2>";
-    echo "<p>Condition: <img src='$iconUrl' alt='Weather icon'>" . $weather->weather['value'] . "</p>";
+    echo "<p>Condition: " . $weather->weather['value'] . "<img src='$iconUrl' alt='Weather icon'>" ."</p>";
     echo "<p>Temperature: " . $weather->temperature['value'] . "°C</p>";
     echo "<p>Wind: " . $weather->wind->speed['value'] . " m/s (" . $weather->wind->speed['name'] . ") from a " . $weather->wind->direction['name'] . " direction</p>";
     echo "<p>Humidity: " . $weather->humidity['value'] . "%</p>";

@@ -7,7 +7,7 @@ ob_start();
 
 # Secure database connection using PDO
 try {
-    $pdo = new PDO('mysql:host=localhost;dbname=twin_city', 'root', '!Rr201612066', [
+    $pdo = new PDO('mysql:host=localhost;dbname=twin_city', 'root', '', [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
     ]);

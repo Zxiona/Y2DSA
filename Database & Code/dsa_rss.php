@@ -7,7 +7,7 @@ ob_start();
 
 # Secure database connection using PDO
 try {
-    $pdo = new PDO('mysql:host=localhost;dbname=twin_city', 'root', '', [
+    $pdo = new PDO('mysql:host=localhost;dbname=twin_city', 'root', '!Rr201612066', [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
     ]);
@@ -25,7 +25,7 @@ try {
     die("Error fetching cities: " . $e->getMessage());
 }
 
-# Fetch Places of Interest (Including Type ID and Borough ID)
+# Fetch Places of Interest
 try {
     $sql_poi = 'SELECT poi.Place_ID, poi.Name AS Place_Name, poi.Address, poi.Description, poi.Photos, 
             poi.Opening_Time, poi.Ending_Time, poi.Type_ID, poi.Borough_ID,
@@ -43,7 +43,10 @@ try {
 }
 
 # Set header for XML output
-header('Content-Type: text/xml; charset=UTF-8');
+header('Content-Type: application/rss+xml; charset=UTF-8');
+
+# Define RSS feed URL
+$feed_url = 'http://localhost/rss_feed.php'; # Change this to your actual URL
 
 # Create a new XMLWriter object
 $writer = new XMLWriter();
@@ -58,75 +61,73 @@ $writer->writeAttribute('xmlns:atom', 'http://www.w3.org/2005/Atom');
 
 $writer->startElement("channel");
 
+# Add Atom link for RSS validation
+$writer->startElement("atom:link");
+$writer->writeAttribute("href", $feed_url);
+$writer->writeAttribute("rel", "self");
+$writer->writeAttribute("type", "application/rss+xml");
+$writer->endElement(); # End atom:link
+
 # RSS feed metadata
 $writer->writeElement('title', 'Cities and Places of Interest');
 $writer->writeElement('description', 'A list of cities and their places of interest.');
-$writer->writeElement('link', 'http://localhost/cities_places');
+$writer->writeElement('link', $feed_url);
+$writer->writeElement('lastBuildDate', date(DATE_RSS));
 
-# RSS Image
+# Add channel image
 $writer->startElement('image');
-$writer->writeElement('title', 'Cities and Places');
-$writer->writeElement('link', 'http://localhost/cities_places');
+$writer->writeElement('title', 'Cities and Places of Interest');
+$writer->writeElement('link', $feed_url);
 $writer->writeElement('url', 'http://localhost/images/logo.png'); # Modify with a valid image URL
-$writer->writeElement('width', '120');
-$writer->writeElement('height', '68');
 $writer->endElement(); # End image
 
-# --- ADD CITIES SECTION ---
-$writer->startElement("cities");
+# --- ADD CITIES TO RSS ---
 foreach ($cities as $city) {
-    $writer->startElement("city");
-
-    $writer->writeElement('id', $city['City_ID']);
-    $writer->writeElement('name', htmlspecialchars($city['Name']));
-    $writer->writeElement('country', htmlspecialchars($city['Country']));
-    $writer->writeElement('population', number_format($city['Population']));
-    $writer->writeElement('size', number_format($city['Size'], 2) . ' km²');
-    $writer->writeElement('timezone', htmlspecialchars($city['Timezone']));
-    $writer->writeElement('language', htmlspecialchars($city['Language']));
-    $writer->writeElement('elevation', number_format($city['Elevation'], 2) . ' meters');
-
-    $writer->endElement(); # End city
-}
-$writer->endElement(); # End cities
-
-# --- ADD PLACES OF INTEREST SECTION ---
-$writer->startElement("places");
-foreach ($places as $place) {
-    $writer->startElement("place");
-
-    $writer->writeElement('id', $place['Place_ID']);
-    $writer->writeElement('name', htmlspecialchars($place['Place_Name']));
-    $writer->writeElement('type', htmlspecialchars($place['Type_Name']));
-    $writer->writeElement('borough_id', $place['Borough_ID']);
-    $writer->writeElement('borough', htmlspecialchars($place['Borough_Name']));
-    $writer->writeElement('city', htmlspecialchars($place['City_Name']));
-    $writer->writeElement('country', htmlspecialchars($place['Country']));
-    $writer->writeElement('address', htmlspecialchars($place['Address']));
-    $writer->writeElement('description', htmlspecialchars($place['Description']));
-
-    # Include the image (if available)
-    if (!empty($place['Photos'])) {
-        $writer->writeElement('photo', htmlspecialchars($place['Photos']));
-    }
-
-    $writer->writeElement('opening_time', $place['Opening_Time']);
-    $writer->writeElement('closing_time', $place['Ending_Time']);
-
-    # Add unique GUID for RSS readers
-    $writer->startElement('guid');
-    $writer->writeAttribute('isPermaLink', 'false');
-    $writer->text('place-' . $place['Place_ID']);
+    $writer->startElement("item");
+    $writer->writeElement('title', "City: " . html_entity_decode($city['Name']) . ", " . html_entity_decode($city['Country']));
+    $writer->writeElement('link', "http://localhost/city/" . $city['City_ID']);
+    
+    # Use CDATA to prevent encoding issues
+    $writer->startElement('description');
+    $writer->writeCData("Population: " . number_format($city['Population']) . " | Size: " . number_format($city['Size'], 2) . " km²");
     $writer->endElement();
 
-    $writer->endElement(); # End place
+    $writer->writeElement('pubDate', date(DATE_RSS));
+    $writer->writeElement('guid', "http://localhost/city/" . $city['City_ID']);
+    $writer->endElement(); # End item
 }
-$writer->endElement(); # End places
+
+# --- ADD PLACES OF INTEREST TO RSS ---
+foreach ($places as $place) {
+    $writer->startElement("item");
+    $writer->writeElement('title', "Place of Interest: " . html_entity_decode($place['Place_Name']));
+    $writer->writeElement('link', "http://localhost/place/" . $place['Place_ID']);
+    
+    # Use CDATA for descriptions
+    $writer->startElement('description');
+    $writer->writeCData($place['Description']);
+    $writer->endElement();
+
+    $writer->writeElement('pubDate', date(DATE_RSS));
+    $writer->writeElement('guid', "http://localhost/place/" . $place['Place_ID']);
+    
+    # Include an image (if available)
+    if (!empty($place['Photos'])) {
+        $writer->startElement('enclosure');
+        $writer->writeAttribute('url', htmlspecialchars($place['Photos']));
+        $writer->writeAttribute('type', 'image/jpeg'); 
+        $writer->writeAttribute('length', '0'); # Required field for RSS validation
+        $writer->endElement();
+    }
+
+    $writer->endElement(); # End item
+}
 
 $writer->endElement(); # End channel
 $writer->endElement(); # End RSS
 
 $writer->endDocument();
+header('Content-Type: text/xml');
 $writer->flush();
 
 # Clear output buffer

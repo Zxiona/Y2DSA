@@ -46,7 +46,7 @@ try {
 header('Content-Type: application/rss+xml; charset=UTF-8');
 
 # Define RSS feed URL
-$feed_url = 'http://localhost/rss_feed.php'; # Change this to your actual URL
+$feed_url = 'http://localhost/ws16/dsa_rss.php'; # Change this to your actual URL
 
 # Create a new XMLWriter object
 $writer = new XMLWriter();
@@ -78,14 +78,13 @@ $writer->writeElement('lastBuildDate', date(DATE_RSS));
 $writer->startElement('image');
 $writer->writeElement('title', 'Cities and Places of Interest');
 $writer->writeElement('link', $feed_url);
-$writer->writeElement('url', 'http://localhost/images/logo.png'); # Modify with a valid image URL
+$writer->writeElement('url', 'https://upload.wikimedia.org/wikipedia/commons/4/43/Feed-icon.svg'); # Modify with a valid image URL
 $writer->endElement(); # End image
 
 # --- ADD CITIES TO RSS ---
 foreach ($cities as $city) {
     $writer->startElement("item");
     $writer->writeElement('title', "City: " . html_entity_decode($city['Name']) . ", " . html_entity_decode($city['Country']));
-    $writer->writeElement('link', "http://localhost/city/" . $city['City_ID']);
     
     # Use CDATA to prevent encoding issues
     $writer->startElement('description');
@@ -93,7 +92,6 @@ foreach ($cities as $city) {
     $writer->endElement();
 
     $writer->writeElement('pubDate', date(DATE_RSS));
-    $writer->writeElement('guid', "http://localhost/city/" . $city['City_ID']);
     $writer->endElement(); # End item
 }
 
@@ -109,7 +107,6 @@ foreach ($places as $place) {
     $writer->endElement();
 
     $writer->writeElement('pubDate', date(DATE_RSS));
-    $writer->writeElement('guid', "http://localhost/place/" . $place['Place_ID']);
     
     # Include an image (if available)
     if (!empty($place['Photos'])) {
